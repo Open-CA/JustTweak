@@ -10,7 +10,7 @@ import XCTest
 @testable import JustTweak
 
 class TweakManager_PresentationTests: XCTestCase {
-    
+
     var tweakManager: TweakManager!
     let localTweakProviderLowPriority: LocalTweakProvider = {
         let bundle = Bundle(for: TweakManagerTests.self)
@@ -22,7 +22,7 @@ class TweakManager_PresentationTests: XCTestCase {
         let jsonConfigurationURL = bundle.url(forResource: "LocalTweaks_test_override", withExtension: "json")!
         return LocalTweakProvider(jsonURL: jsonConfigurationURL)
     }()
-    
+
     func test_GivenOneLocalTweakProvider_WhenFetchedDisplayableTweaks_ThenAllTweaksSortedByTitleAreReturned() {
         let tweakProviders: [TweakProvider] = [localTweakProviderLowPriority]
         tweakManager = TweakManager(tweakProviders: tweakProviders)
@@ -66,7 +66,7 @@ class TweakManager_PresentationTests: XCTestCase {
         ]
         XCTAssertEqual(displayableTweaks, targetTweaks)
     }
-    
+
     func test_GivenTwoLocalTweakProviders_WhenFetchedDisplayableTweaks_ThenTweaksFromBothConfigurationsSortedByTitleAreReturned() {
         let tweakProviders: [LocalTweakProvider] = [localTweakProviderHighPriority, localTweakProviderLowPriority]
         tweakManager = TweakManager(tweakProviders: tweakProviders)

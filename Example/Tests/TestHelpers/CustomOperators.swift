@@ -25,8 +25,7 @@ infix operator |||: ComparisonPrecedence
 public func |||(lhs: Bool?, rhs: Bool?) -> Bool {
     if let lhs = lhs, let rhs = rhs {
         return lhs || rhs
-    }
-    else if let lhs = lhs {
+    } else if let lhs = lhs {
         return lhs
     }
     return rhs ?? false

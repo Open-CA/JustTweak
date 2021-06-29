@@ -6,7 +6,7 @@
 import XCTest
 @testable import JustTweak
 
-fileprivate struct Constants {
+private struct Constants {
     static let featureActiveValue = true
     static let feature = "some_feature"
     static let variable = "some_variable"
@@ -15,7 +15,7 @@ fileprivate struct Constants {
 }
 
 class TweakManagerCacheTests: XCTestCase {
-    
+
     fileprivate var mockTweakProvider: MockTweakProvider!
     var tweakManager: TweakManager!
 
@@ -25,23 +25,23 @@ class TweakManagerCacheTests: XCTestCase {
         tweakManager = TweakManager(tweakProviders: [mockTweakProvider])
         tweakManager.useCache = true
     }
-    
+
     override func tearDown() {
         mockTweakProvider = nil
         tweakManager = nil
         super.tearDown()
     }
-    
+
     // MARK: - isFeatureEnabled(feature:)
-    
+
     func testFeatureEnabled_CacheDisabled() {
         testFeatureEnabled(useCache: false)
     }
-    
+
     func testFeatureEnabled_CacheEnabled() {
         testFeatureEnabled(useCache: true)
     }
-    
+
     private func testFeatureEnabled(useCache: Bool) {
         tweakManager.useCache = useCache
         XCTAssertEqual(mockTweakProvider.isFeatureEnabledCallsCounter, 0)
@@ -53,17 +53,17 @@ class TweakManagerCacheTests: XCTestCase {
         XCTAssertEqual(tweakManager.isFeatureEnabled(Constants.feature), Constants.featureActiveValue)
         XCTAssertEqual(mockTweakProvider.isFeatureEnabledCallsCounter, useCache ? 2 : 3)
     }
-    
+
     // MARK: - tweakWith(feature:variable:)
-    
+
     func testTweakFetch_CacheDisabled() {
         tweakFetch(useCache: false)
     }
-    
+
     func testTweakFetch_CacheEnabled() {
         tweakFetch(useCache: true)
     }
-    
+
     private func tweakFetch(useCache: Bool) {
         tweakManager.useCache = useCache
         XCTAssertEqual(mockTweakProvider.tweakWithFeatureVariableCallsCounter, 0)
@@ -80,17 +80,17 @@ class TweakManagerCacheTests: XCTestCase {
         XCTAssertEqual(tweakManager.tweakWith(feature: Constants.feature, variable: Constants.variable)!.value as! Bool, value)
         XCTAssertEqual(mockTweakProvider.tweakWithFeatureVariableCallsCounter, useCache ? 3 : 4)
     }
-    
+
     // MARK: - activeVariation(experiment:)
-    
+
     func testActiveVariation_CacheDisabled() {
         testActiveVariation(useCache: false)
     }
-    
+
     func testActiveVariation_CacheEnabled() {
         testActiveVariation(useCache: true)
     }
-    
+
     private func testActiveVariation(useCache: Bool) {
         tweakManager.useCache = useCache
         XCTAssertEqual(mockTweakProvider.activeVariationCallsCounter, 0)
@@ -104,43 +104,42 @@ class TweakManagerCacheTests: XCTestCase {
     }
 }
 
-fileprivate class MockTweakProvider: MutableTweakProvider {
-    
+private class MockTweakProvider: MutableTweakProvider {
+
     var logClosure: LogClosure?
-    
+
     var isFeatureEnabledCallsCounter: Int = 0
     var tweakWithFeatureVariableCallsCounter: Int = 0
     var activeVariationCallsCounter: Int = 0
-    
-    var featureBackingStore: [String : Bool] = [Constants.feature: Constants.featureActiveValue]
-    var tweakBackingStore: [String : [String : Tweak]] = [:]
-    var experimentBackingStore: [String : String] = [Constants.experiment: Constants.activeVariation]
-    
+
+    var featureBackingStore: [String: Bool] = [Constants.feature: Constants.featureActiveValue]
+    var tweakBackingStore: [String: [String: Tweak]] = [:]
+    var experimentBackingStore: [String: String] = [Constants.experiment: Constants.activeVariation]
+
     func isFeatureEnabled(_ feature: String) -> Bool {
         isFeatureEnabledCallsCounter += 1
         return featureBackingStore[feature] ?? false
     }
-    
+
     func tweakWith(feature: String, variable: String) -> Tweak? {
         tweakWithFeatureVariableCallsCounter += 1
         return tweakBackingStore[feature]?[variable]
     }
-    
+
     func activeVariation(for experiment: String) -> String? {
         activeVariationCallsCounter += 1
         return experimentBackingStore[experiment]
     }
-    
+
     func set(_ value: TweakValue, feature: String, variable: String) {
         let tweak = Tweak(feature: feature, variable: variable, value: value)
         if let _ = tweakBackingStore[feature] {
             tweakBackingStore[feature]?[variable] = tweak
-        }
-        else {
-            tweakBackingStore[feature] = [variable : tweak]
+        } else {
+            tweakBackingStore[feature] = [variable: tweak]
         }
     }
-    
+
     func deleteValue(feature: String, variable: String) {
         tweakBackingStore[feature]?[variable] = nil
     }

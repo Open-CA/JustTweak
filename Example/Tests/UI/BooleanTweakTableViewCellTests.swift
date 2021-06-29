@@ -7,7 +7,7 @@ import XCTest
 @testable import JustTweak
 
 class BooleanTweakTableViewCellTests: XCTestCase {
-    
+
     func testInformsDelegateOfValueChanges() {
         let mockDelegate = MockTweakCellDelegate()
         let cell = BooleanTweakTableViewCell()
@@ -15,5 +15,5 @@ class BooleanTweakTableViewCellTests: XCTestCase {
         cell.switchControl.sendActions(for: .valueChanged)
         XCTAssertTrue(mockDelegate.didCallDelegate)
     }
-    
+
 }
