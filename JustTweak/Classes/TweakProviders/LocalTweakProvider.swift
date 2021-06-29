@@ -1,11 +1,11 @@
 //
-//  LocalTweakProvider.swift
+//  LocalConfiguration.swift
 //  Copyright (c) 2016 Just Eat Holding Ltd. All rights reserved.
 //
 
 import Foundation
 
-final public class LocalTweakProvider {
+final public class LocalConfiguration {
 
     private enum EncodingKeys: String {
         case Title, Description, Group, Value
@@ -51,7 +51,7 @@ final public class LocalTweakProvider {
     }
 }
 
-extension LocalTweakProvider: TweakProvider {
+extension LocalConfiguration: Configuration {
 
     public func isFeatureEnabled(_ feature: String) -> Bool {
         return configurationFile[feature] != nil

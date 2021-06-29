@@ -1,12 +1,12 @@
 //
-//  OptimizelyTweakProvider.swift
+//  OptimizelyConfiguration.swift
 //  Copyright (c) 2018 Just Eat Holding Ltd. All rights reserved.
 //
 
 import JustTweak
-import OptimizelySDKiOS
-
-public class OptimizelyTweakProvider: Configuration {
+//import OptimizelySDKiOS
+/*
+public class OptimizelyConfiguration: Configuration {
     
     private var optimizelyManager: OPTLYManager?
     private var optimizelyClient: OPTLYClient?
@@ -32,7 +32,7 @@ public class OptimizelyTweakProvider: Configuration {
             case (nil, let client):
                 strongSelf.optimizelyClient = client
                 let notificationCentre = NotificationCenter.default
-                notificationCentre.post(name: TweakProviderDidChangeNotification, object: strongSelf)
+                notificationCentre.post(name: TweakConfigurationDidChangeNotification, object: strongSelf)
             case (let error, _):
                 if let error = error {
                     strongSelf.logClosure?("Couldn't initialize Optimizely manager. \(error.localizedDescription)", .error)
@@ -78,3 +78,4 @@ public class OptimizelyTweakProvider: Configuration {
         return optimizelyClient?.activate(experiment, userId: userId)?.variationKey
     }
 }
+*/

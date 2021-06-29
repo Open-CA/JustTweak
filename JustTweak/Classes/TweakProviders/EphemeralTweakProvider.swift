@@ -1,11 +1,11 @@
 //
-//  EphemeralTweakProvider.swift
+//  EphemeralConfiguration.swift
 //  Copyright (c) 2018 Just Eat Holding Ltd. All rights reserved.
 //
 
 import Foundation
 
-extension NSDictionary: TweakProvider {
+extension NSDictionary: Configuration {
 
     public var logClosure: LogClosure? {
         get { return nil }
@@ -33,7 +33,7 @@ extension NSDictionary: TweakProvider {
     }
 }
 
-extension NSMutableDictionary: MutableTweakProvider {
+extension NSMutableDictionary: MutableConfiguration {
 
     public func set(_ value: TweakValue, feature: String, variable: String) {
         self[variable] = value

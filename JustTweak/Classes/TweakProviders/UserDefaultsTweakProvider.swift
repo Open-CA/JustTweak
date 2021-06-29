@@ -1,11 +1,11 @@
 //
-//  UserDefaultsTweakProvider.swift
+//  UserDefaultsConfiguration.swift
 //  Copyright (c) 2016 Just Eat Holding Ltd. All rights reserved.
 //
 
 import Foundation
 
-final public class UserDefaultsTweakProvider {
+final public class UserDefaultsConfiguration {
 
     private let userDefaults: UserDefaults
 
@@ -18,7 +18,7 @@ final public class UserDefaultsTweakProvider {
     }
 }
 
-extension UserDefaultsTweakProvider: TweakProvider {
+extension UserDefaultsConfiguration: Configuration {
 
     public func isFeatureEnabled(_ feature: String) -> Bool {
         let userDefaultsKey = keyForTweakWithIdentifier(feature)
@@ -41,7 +41,7 @@ extension UserDefaultsTweakProvider: TweakProvider {
     }
 }
 
-extension UserDefaultsTweakProvider: MutableTweakProvider {
+extension UserDefaultsConfiguration: MutableConfiguration {
 
     public func set(_ value: TweakValue, feature: String, variable: String) {
         updateUserDefaults(value: value, feature: feature, variable: variable)
@@ -52,10 +52,10 @@ extension UserDefaultsTweakProvider: MutableTweakProvider {
     }
 }
 
-extension UserDefaultsTweakProvider {
+extension UserDefaultsConfiguration {
 
     private func keyForTweakWithIdentifier(_ identifier: String) -> String {
-        return "\(UserDefaultsTweakProvider.userDefaultsKeyPrefix).\(identifier)"
+        return "\(UserDefaultsConfiguration.userDefaultsKeyPrefix).\(identifier)"
     }
 
     private func updateUserDefaults(_ object: AnyObject?) -> TweakValue? {
@@ -72,8 +72,8 @@ extension UserDefaultsTweakProvider {
         DispatchQueue.main.async {
             let notificationCenter = NotificationCenter.default
             let tweak = Tweak(feature: feature, variable: variable, value: value)
-            let userInfo = [TweakProviderDidChangeNotificationTweakKey: tweak]
-            notificationCenter.post(name: TweakProviderDidChangeNotification,
+            let userInfo = [TweakConfigurationDidChangeNotificationTweakKey: tweak]
+            notificationCenter.post(name: TweakConfigurationDidChangeNotification,
                                     object: self,
                                     userInfo: userInfo)
         }

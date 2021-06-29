@@ -1,5 +1,5 @@
 //
-//  TweakProvider.swift
+//  TweaksConfiguration.swift
 //  Copyright (c) 2016 Just Eat Holding Ltd. All rights reserved.
 //
 
@@ -11,17 +11,17 @@ public enum LogLevel: Int {
 
 public typealias LogClosure = (String, LogLevel) -> Void
 
-public protocol TweakProvider {
+public protocol Configuration {
     var logClosure: LogClosure? { get set }
     func isFeatureEnabled(_ feature: String) -> Bool
     func tweakWith(feature: String, variable: String) -> Tweak?
     func activeVariation(for experiment: String) -> String?
 }
 
-public protocol MutableTweakProvider: TweakProvider {
+public protocol MutableConfiguration: Configuration {
     func set(_ value: TweakValue, feature: String, variable: String)
     func deleteValue(feature: String, variable: String)
 }
 
-public let TweakProviderDidChangeNotification = Notification.Name("TweakProviderDidChangeNotification")
-public let TweakProviderDidChangeNotificationTweakKey = "TweakProviderDidChangeNotificationTweakKey"
+public let TweakConfigurationDidChangeNotification = Notification.Name("TweakConfigurationDidChangeNotification")
+public let TweakConfigurationDidChangeNotificationTweakKey = "TweakConfigurationDidChangeNotificationTweakKey"
