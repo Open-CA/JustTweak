@@ -6,7 +6,7 @@
 import UIKit
 
 class NumericTweakTableViewCell: TextTweakTableViewCell {
-    
+
     override var keyboardType: UIKeyboardType {
         get {
             return .numberPad

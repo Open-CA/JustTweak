@@ -10,11 +10,11 @@ class TextTweakTableViewCell: UITableViewCell, TweakViewControllerCell, UITextFi
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     var title: String? {
         get {
             return textLabel?.text
@@ -23,7 +23,7 @@ class TextTweakTableViewCell: UITableViewCell, TweakViewControllerCell, UITextFi
             textLabel?.text = newValue
         }
     }
-    
+
     var desc: String? {
         get {
             return detailTextLabel?.text
@@ -32,7 +32,7 @@ class TextTweakTableViewCell: UITableViewCell, TweakViewControllerCell, UITextFi
             detailTextLabel?.text = newValue
         }
     }
-    
+
     var value: TweakValue = "" {
         didSet {
             textField.text = value.description
@@ -44,13 +44,13 @@ class TextTweakTableViewCell: UITableViewCell, TweakViewControllerCell, UITextFi
         }
     }
     weak var delegate: TweakViewControllerCellDelegate?
-    
+
     var keyboardType: UIKeyboardType {
         get {
             return .default
         }
     }
-    
+
     lazy var textField: UITextField! = {
         let textField = UITextField()
         textField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
@@ -65,27 +65,24 @@ class TextTweakTableViewCell: UITableViewCell, TweakViewControllerCell, UITextFi
         self.selectionStyle = .none
         return textField
     }()
-    
+
     @objc func textDidChange() {
         guard let text = textField.text else { return }
         if let int = Int(text) {
             value = int
-        }
-        else if let double = Double(text) {
+        } else if let double = Double(text) {
             value = double
-        }
-        else if let float = Float(text) {
+        } else if let float = Float(text) {
             value = float
-        }
-        else {
+        } else {
             value = text
         }
     }
-    
+
     @objc func textEditingDidEnd() {
         delegate?.tweakConfigurationCellDidChangeValue(self)
     }
-    
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.endEditing(true)
         return true

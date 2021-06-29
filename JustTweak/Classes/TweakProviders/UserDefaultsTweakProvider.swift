@@ -6,20 +6,20 @@
 import Foundation
 
 final public class UserDefaultsTweakProvider {
-    
+
     private let userDefaults: UserDefaults
-    
+
     private static let userDefaultsKeyPrefix = "lib.fragments.userDefaultsKey"
-    
+
     public var logClosure: LogClosure?
-    
+
     public init(userDefaults: UserDefaults) {
         self.userDefaults = userDefaults
     }
 }
 
 extension UserDefaultsTweakProvider: TweakProvider {
-    
+
     public func isFeatureEnabled(_ feature: String) -> Bool {
         let userDefaultsKey = keyForTweakWithIdentifier(feature)
         return userDefaults.bool(forKey: userDefaultsKey)
@@ -35,14 +35,14 @@ extension UserDefaultsTweakProvider: TweakProvider {
                      title: nil,
                      group: nil)
     }
-    
+
     public func activeVariation(for experiment: String) -> String? {
         return nil
     }
 }
 
 extension UserDefaultsTweakProvider: MutableTweakProvider {
-    
+
     public func set(_ value: TweakValue, feature: String, variable: String) {
         updateUserDefaults(value: value, feature: feature, variable: variable)
     }
@@ -53,21 +53,20 @@ extension UserDefaultsTweakProvider: MutableTweakProvider {
 }
 
 extension UserDefaultsTweakProvider {
-    
+
     private func keyForTweakWithIdentifier(_ identifier: String) -> String {
         return "\(UserDefaultsTweakProvider.userDefaultsKeyPrefix).\(identifier)"
     }
-    
+
     private func updateUserDefaults(_ object: AnyObject?) -> TweakValue? {
         if let object = object as? String {
             return object
-        }
-        else if let object = object as? NSNumber {
+        } else if let object = object as? NSNumber {
             return object.tweakValue
         }
         return nil
     }
-        
+
     private func updateUserDefaults(value: TweakValue, feature: String, variable: String) {
         userDefaults.set(value, forKey: keyForTweakWithIdentifier(variable))
         DispatchQueue.main.async {

@@ -6,12 +6,12 @@
 import Foundation
 
 public struct Tweak {
-    
+
     public let feature: String
     public let variable: String
-    
+
     public let value: TweakValue
-    
+
     public let title: String?
     public let desc: String?
     public let group: String?
@@ -20,8 +20,8 @@ public struct Tweak {
     public var displayTitle: String {
         return title ?? "\(feature):\(variable)"
     }
-    
-    private var dictionaryValue: [String : Any?] {
+
+    private var dictionaryValue: [String: Any?] {
         get {
             return ["feature": feature,
                     "variable": variable,
@@ -33,7 +33,7 @@ public struct Tweak {
             ]
         }
     }
-    
+
     public init(feature: String, variable: String, value: TweakValue, title: String? = nil, description: String? = nil, group: String? = nil, source: String? = nil) {
         self.feature = feature
         self.variable = variable
@@ -46,7 +46,7 @@ public struct Tweak {
 }
 
 extension Tweak: CustomStringConvertible {
-    
+
     public var description: String {
         get {
             return dictionaryValue.description
@@ -68,23 +68,23 @@ extension Tweak: Equatable {
 }
 
 public extension Tweak {
-    
+
     var intValue: Int {
         return value.intValue
     }
-    
+
     var floatValue: Float {
         return value.floatValue
     }
-    
+
     var doubleValue: Double {
         return value.doubleValue
     }
-    
+
     var boolValue: Bool {
         return value.boolValue
     }
-    
+
     var stringValue: String? {
         return value.stringValue
     }

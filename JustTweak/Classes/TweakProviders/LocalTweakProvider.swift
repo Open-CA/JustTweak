@@ -6,18 +6,18 @@
 import Foundation
 
 final public class LocalTweakProvider {
-    
-    private enum EncodingKeys : String {
+
+    private enum EncodingKeys: String {
         case Title, Description, Group, Value
     }
-    
-    private let configurationFile: [String : [String : [String : AnyObject]]]
+
+    private let configurationFile: [String: [String: [String: AnyObject]]]
     private let fileURL: URL
-    
+
     public var logClosure: LogClosure?
-    
-    public var features: [String : [String]] {
-        var storage: [String : [String]] = [:]
+
+    public var features: [String: [String]] {
+        var storage: [String: [String]] = [:]
         for feature in Array(configurationFile.keys) {
             for variable in Array(configurationFile[feature]!.keys) {
                 if let _ = storage[feature] {
@@ -29,24 +29,22 @@ final public class LocalTweakProvider {
         }
         return storage
     }
-    
+
     public init(jsonURL: URL) {
         let data = try! Data(contentsOf: jsonURL)
         let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
-        let configuration = json as! [String : [String : [String : AnyObject]]]
+        let configuration = json as! [String: [String: [String: AnyObject]]]
         configurationFile = configuration
         fileURL = jsonURL
     }
-    
+
     private func tweakValueFromJSONObject(_ jsonObject: AnyObject?) -> TweakValue {
         let value: TweakValue
         if let numberValue = jsonObject as? NSNumber {
             value = numberValue.tweakValue
-        }
-        else if let stringValue = jsonObject as? String {
+        } else if let stringValue = jsonObject as? String {
             value = stringValue
-        }
-        else {
+        } else {
             value = false
         }
         return value
@@ -54,11 +52,11 @@ final public class LocalTweakProvider {
 }
 
 extension LocalTweakProvider: TweakProvider {
-    
+
     public func isFeatureEnabled(_ feature: String) -> Bool {
         return configurationFile[feature] != nil
     }
-    
+
     public func tweakWith(feature: String, variable: String) -> Tweak? {
         guard let entry = configurationFile[feature]?[variable] else { return nil }
         let title = entry[EncodingKeys.Title.rawValue] as? String
@@ -72,7 +70,7 @@ extension LocalTweakProvider: TweakProvider {
                      description: description,
                      group: group)
     }
-    
+
     public func activeVariation(for experiment: String) -> String? {
         return nil
     }

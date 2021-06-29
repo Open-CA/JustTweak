@@ -6,15 +6,15 @@
 import UIKit
 
 internal class BooleanTweakTableViewCell: UITableViewCell, TweakViewControllerCell {
-    
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     var title: String? {
         get {
             return textLabel?.text
@@ -23,7 +23,7 @@ internal class BooleanTweakTableViewCell: UITableViewCell, TweakViewControllerCe
             textLabel?.text = newValue
         }
     }
-    
+
     var desc: String? {
         get {
             return detailTextLabel?.text
@@ -32,7 +32,7 @@ internal class BooleanTweakTableViewCell: UITableViewCell, TweakViewControllerCe
             detailTextLabel?.text = newValue
         }
     }
-    
+
     var value: TweakValue {
         get {
             return switchControl.isOn
@@ -42,7 +42,7 @@ internal class BooleanTweakTableViewCell: UITableViewCell, TweakViewControllerCe
         }
     }
     weak var delegate: TweakViewControllerCellDelegate?
-    
+
     lazy var switchControl: UISwitch! = {
         let switchControl = UISwitch()
         switchControl.addTarget(self, action: #selector(didChangeTweakValue), for: .valueChanged)
@@ -50,9 +50,9 @@ internal class BooleanTweakTableViewCell: UITableViewCell, TweakViewControllerCe
         self.selectionStyle = .none
         return switchControl
     }()
-    
+
     @objc func didChangeTweakValue() {
         delegate?.tweakConfigurationCellDidChangeValue(self)
     }
-    
+
 }

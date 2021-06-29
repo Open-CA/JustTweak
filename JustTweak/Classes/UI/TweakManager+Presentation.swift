@@ -6,9 +6,9 @@
 import Foundation
 
 extension TweakManager {
-    
+
     var displayableTweaks: [Tweak] {
-        var tweaks = [String : Tweak]()
+        var tweaks = [String: Tweak]()
         for localTweakProvider in self.localTweakProviders.reversed() {
             for (feature, variables) in localTweakProvider.features {
                 for variable in variables {
@@ -28,7 +28,7 @@ extension TweakManager {
         }
         return tweaks.values.sorted(by: { $0.displayTitle < $1.displayTitle })
     }
-    
+
     private var localTweakProviders: [LocalTweakProvider] {
         return tweakProviders.filter { $0 is LocalTweakProvider } as! [LocalTweakProvider]
     }

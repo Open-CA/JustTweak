@@ -12,7 +12,7 @@ public enum LogLevel: Int {
 public typealias LogClosure = (String, LogLevel) -> Void
 
 public protocol TweakProvider {
-    var logClosure: LogClosure? { set get }
+    var logClosure: LogClosure? { get set }
     func isFeatureEnabled(_ feature: String) -> Bool
     func tweakWith(feature: String, variable: String) -> Tweak?
     func activeVariation(for experiment: String) -> String?

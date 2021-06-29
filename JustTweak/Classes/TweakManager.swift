@@ -6,9 +6,9 @@
 import Foundation
 
 final public class TweakManager {
-    
+
     var tweakProviders: [TweakProvider]
-    
+
     public var logClosure: LogClosure? {
         didSet {
             for (index, _) in tweakProviders.enumerated() {
@@ -16,7 +16,7 @@ final public class TweakManager {
             }
         }
     }
-    
+
     public var useCache: Bool = false {
         didSet {
             if useCache != oldValue {
@@ -24,18 +24,18 @@ final public class TweakManager {
             }
         }
     }
-    
+
     private let queue = DispatchQueue(label: "com.justeat.tweakManager")
-    
-    private var featureCache = [String : Bool]()
-    private var tweakCache = [String : [String : Tweak]]()
-    private var experimentCache = [String : String]()
-    private var observersMap = [NSObject : NSObjectProtocol]()
-    
+
+    private var featureCache = [String: Bool]()
+    private var tweakCache = [String: [String: Tweak]]()
+    private var experimentCache = [String: String]()
+    private var observersMap = [NSObject: NSObjectProtocol]()
+
     var mutableTweakProvider: MutableTweakProvider? {
         return tweakProviders.first { $0 is MutableTweakProvider } as? MutableTweakProvider
     }
-    
+
     public init(tweakProviders: [TweakProvider]) {
         self.tweakProviders = tweakProviders
         for (index, _) in self.tweakProviders.enumerated() {
@@ -44,21 +44,21 @@ final public class TweakManager {
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(configurationDidChange), name: TweakProviderDidChangeNotification, object: nil)
     }
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
 }
 
 extension TweakManager: MutableTweakProvider {
-    
+
     public func isFeatureEnabled(_ feature: String) -> Bool {
         queue.sync {
             if useCache, let cachedFeature = featureCache[feature] {
                 logClosure?("Feature '\(cachedFeature)' found in cache.)", .verbose)
                 return cachedFeature
             }
-            
+
             var enabled = false
             for (_, configuration) in tweakProviders.enumerated() {
                 if configuration.isFeatureEnabled(feature) {
@@ -72,15 +72,15 @@ extension TweakManager: MutableTweakProvider {
             return enabled
         }
     }
-    
+
     public func tweakWith(feature: String, variable: String) -> Tweak? {
         queue.sync {
             if useCache, let cachedTweaks = tweakCache[feature], let cachedTweak = cachedTweaks[variable] {
                 logClosure?("Tweak '\(cachedTweak)' found in cache.)", .verbose)
                 return cachedTweak
             }
-            
-            var result: Tweak? = nil
+
+            var result: Tweak?
             for (_, configuration) in tweakProviders.enumerated() {
                 if let tweak = configuration.tweakWith(feature: feature, variable: variable) {
                     logClosure?("Tweak '\(tweak)' found in configuration \(configuration))", .verbose)
@@ -91,8 +91,7 @@ extension TweakManager: MutableTweakProvider {
                                    group: tweak.group,
                                    source: "\(type(of: configuration))")
                     break
-                }
-                else {
+                } else {
                     logClosure?("Tweak with identifier '\(variable)' NOT found in configuration \(configuration))", .verbose)
                 }
             }
@@ -102,24 +101,23 @@ extension TweakManager: MutableTweakProvider {
                     if let _ = tweakCache[feature] {
                         tweakCache[feature]?[variable] = result
                     } else {
-                        tweakCache[feature] = [variable : result]
+                        tweakCache[feature] = [variable: result]
                     }
                 }
-            }
-            else {
+            } else {
                 logClosure?("No Tweak found for identifier '\(variable)'", .verbose)
             }
             return result
         }
     }
-    
+
     public func activeVariation(for experiment: String) -> String? {
         queue.sync {
             if useCache, let cachedExperiment = experimentCache[experiment] {
                 logClosure?("Experiment '\(cachedExperiment)' found in cache.)", .verbose)
                 return cachedExperiment
             }
-            
+
             var activeVariation: String?
             for (_, configuration) in tweakProviders.enumerated() {
                 activeVariation = configuration.activeVariation(for: experiment)
@@ -131,7 +129,7 @@ extension TweakManager: MutableTweakProvider {
             return activeVariation
         }
     }
-    
+
     public func set(_ value: TweakValue, feature: String, variable: String) {
         guard let mutableTweakProvider = self.mutableTweakProvider else { return }
         if useCache {
@@ -156,7 +154,7 @@ extension TweakManager: MutableTweakProvider {
 }
 
 extension TweakManager {
-    
+
     public func registerForConfigurationsUpdates(_ object: NSObject, closure: @escaping (Tweak) -> Void) {
         self.deregisterFromConfigurationsUpdates(object)
         queue.sync {
@@ -170,7 +168,7 @@ extension TweakManager {
             observersMap[object] = observer
         }
     }
-    
+
     public func deregisterFromConfigurationsUpdates(_ object: NSObject) {
         queue.sync {
             guard let observer = observersMap[object] else { return }
@@ -178,7 +176,7 @@ extension TweakManager {
             observersMap.removeValue(forKey: object)
         }
     }
-    
+
     @objc private func configurationDidChange() {
         if useCache {
             resetCache()
@@ -187,12 +185,12 @@ extension TweakManager {
 }
 
 extension TweakManager {
-    
+
     public func resetCache() {
         queue.sync {
-            featureCache = [String : Bool]()
-            tweakCache = [String : [String : Tweak]]()
-            experimentCache = [String : String]()
+            featureCache = [String: Bool]()
+            tweakCache = [String: [String: Tweak]]()
+            experimentCache = [String: String]()
         }
     }
 }
